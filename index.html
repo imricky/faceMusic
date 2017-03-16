@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="no-js">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>心乐FM</title>
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<meta name="author" content="2007" />
+		<script src="js/webcam.js"></script>
+		 <script src="http://cdn.bootcss.com/jquery/3.0.0-alpha1/jquery.min.js"></script>
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/styles.css" rel="stylesheet">
+		<style>
+			#left-page-h2{
+			    color: #ffa07a;
+			    letter-spacing: 20px;
+			    position: relative;
+			    margin-top: 10px;
+			    /*margin-left: 20px;*/
+			}
+			.my-blog{
+			    position: absolute;
+			    width: 60px;
+			    height: 30px;
+			    border: 1px solid #98fb98;
+			    left: 120px;
+			    bottom: 60px;
+			    border-radius: 5px;
+			    text-align: center;
+			    line-height: 30px;
+			}
+			.my-src-code{
+			    position: absolute;
+			    width: 60px;
+			    height: 30px;
+			    border: 1px solid #98fb98;
+			    left: 120px;
+			    bottom: 20px;
+			    border-radius: 5px;
+			    text-align: center;
+			    line-height: 30px;
+			}
+			#fm-info{
+			    color: #f08080;
+			}
+
+
+
+			.bot{
+			    position: absolute;
+			    bottom: 5px;
+			    width: 600px;
+			    height: 50px;
+			    left: 50%;
+			    margin-left: -300px;
+			    /*border: 1px solid red;*/
+			}
+			.beian{
+			    text-align: center;
+			    padding-top: 5px;
+			    margin: 0 auto;
+			    color: #30608F;
+			}
+			.beian a{
+			    text-decoration: none;
+			    color: cadetblue;
+			}
+			#backhome{
+			    color: #6b8e23;
+			}
+			#backhome:hover{
+			    color: #000000;
+			    text-decoration: blink;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="my_camera" style="position: absolute;overflow: hidden;"></div>
+		<header style="position: fixed;width: 100%;height: 100%;">
+			<section class="hero">
+				<div class="texture-overlay"></div>
+				<div class="container">
+					<div class="row nav-wrapper">
+						<div class="col-md-6 col-sm-6 col-xs-6 text-left">
+							<h1 id="title">心乐 <span id="fm-info">FM</span> <font id="songTitle" style="font-size:22px"></h1>
+							<h4 id="left-page-h2">听见你的笑</h4>
+						</div>
+						<div class="col-md-6 col-sm-6 col-xs-6 text-right navicon">
+							<a herf="javascript:;" style="text-align:center" class="use-btn animated fadeInUp" id="playBtn">点拍照):</a>
+							<a style="margin-left:15px;text-align:center" id="changeSong" href="javascript:;" class="learn-btn animated fadeInUp">换一换</a>
+						</div>
+					</div>
+					<div class="row hero-content" style="margin-top:10%">
+						<div class="col-md-12" style="text-align:right;">
+							<h2 style="font-size:22px">心悦指数</h2>
+							<h2 id="smile" style="font-size:22px">):</h2>
+							<h2 style="font-size:22px">猜测年龄</h2>
+							<h2 id="age" style="font-size:22px">):</h2>
+						</div>
+					</div>
+
+					<!--<div class="my-blog"><a href="https://blog.rickyer.com" target="_blank">博客</a></div>-->
+					<!--<div class="my-src-code"><a href="https://github.com/imricky" target="_blank">源码</a></div>-->
+
+
+					<div class="row hero-content" style="margin-top:8%">
+						<div class="col-md-12 col-md-offset-10">
+							<a style="margin-left:60px;text-align:center;" id="takePhoto" href="javascript:;" onclick="capture()" class="learn-btn animated fadeInUp">拍照</a>
+						</div>
+					</div>
+
+					<!--底栏-->
+					<div class="bot">
+						<p class="beian"><a href="#" style="color: #db7093">©2016-2017</a> | <a href="https://blog.rickyer.com" target="_blank">Ricky</a> | <a href="https://github.com/imricky" target="_blank" style="color: #6b8e23">GitHub</a> </p>
+						<p class="beian"><a href="http://www.miitbeian.gov.cn/" >浙ICP备15040135号-1</a></p>
+					</div>
+				</div>
+			</section>
+		</header>
+		<div class="overlay overlay-boxify">
+			<nav>
+				<ul>
+					<li><a href="#about"><i class="fa fa-heart"></i>About</a></li>
+					<li><a href="#features"><i class="fa fa-flash"></i>Features</a></li>
+				</ul>
+				<ul>
+					<li><a href="#screenshots"><i class="fa fa-desktop"></i>Screenshots</a></li>
+					<li><a href="#download"><i class="fa fa-download"></i>Download</a></li>
+				</ul>
+			</nav>
+		</div>
+		<audio autoplay="true" src="" id="myAudioPlayer"></audio>
+		<script language="JavaScript">
+		    var playList = null;
+		    var myAudioPlayer = document.getElementById("myAudioPlayer");
+		    $("#title").click(function(){
+		        var
+                  el = document.documentElement
+                , rfs =
+                       el.requestFullScreen
+                    || el.webkitRequestFullScreen
+                    || el.mozRequestFullScreen
+                ;
+                rfs.call(el);
+
+		    });
+            if (document.addEventListener)
+            {
+                document.addEventListener('webkitfullscreenchange', exitHandler, false);
+            }
+            function exitHandler()
+            {
+                if (document.webkitIsFullScreen)
+                {
+                    $(".hero-content").css({"margin-top":"13%"});
+                }else{
+                    $(".hero-content").css({"margin-top":"8%"});
+                }
+            }
+    		Webcam.set({
+    			width: 320,
+    			height: 240,
+    			image_format: 'jpeg',
+    			jpeg_quality: 100
+    		});
+    		Webcam.attach( '#my_camera' );
+    		var vid = document.getElementsByTagName("video");
+    		function capture(){
+    		    vid[0].pause();
+    		    Webcam.snap( function(data_uri) {
+    		        $("#takePhoto").html("Loading...");
+                    Webcam.upload( data_uri, 'saveImage.php', function(code, text) {
+                        obj = JSON.parse(text);
+
+                        if(obj.age == 0){
+                            $("#age").html("-520");
+                            $("#smile").html("外星人你好):");
+                        }else{
+                            $("#age").html(obj.age);
+                            $("#smile").html(obj.smile);
+                        }
+                        playList = obj.songs;
+                        setUpPlayer();
+                        $("#changeSong").attr("onclick","setUpPlayer()");
+                        $("#takePhoto").html("再拍");
+                        $("#takePhoto").attr("onclick","resume()");
+                    });
+                });
+    		}
+
+    		function setUpPlayer(){
+    		    var index = Math.floor(Math.random() * playList.length) + 1;
+    		    $("#songTitle").html(" —— "+playList[index].name);
+    		    $("#myAudioPlayer").attr("src",playList[index].mp3Url);
+    		    $("#playBtn").html("播放中...");
+    		    $("#playBtn").attr("onclick","pauseSong()");
+    		}
+
+    		function pauseSong(){
+    		    myAudioPlayer.pause();
+    		    $("#playBtn").attr("onclick","playSong()");
+    		    $("#playBtn").html("继续");
+    		}
+
+    	    function playSong(){
+    	        myAudioPlayer.play();
+    	        $("#playBtn").attr("onclick","pauseSong()");
+    		    $("#playBtn").html("播放中...");
+    	    }
+
+    		function resume(){
+    		    vid[0].play();
+    		    $("#takePhoto").html("拍照");
+                $("#takePhoto").attr("onclick","capture()");
+    		}
+	    </script>
+
+	</body>
+</html>
